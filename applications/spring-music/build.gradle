@@ -1,0 +1,81 @@
+buildscript {
+    ext {
+        springBootVersion = '2.1.0.RELEASE'
+        springCloudCoreVersion = '1.2.6.RELEASE'
+        springCloudConnectorsVersion = '2.0.3.RELEASE'
+    }
+
+    repositories {
+        jcenter()
+        mavenCentral()
+        maven { url "https://repo.spring.io/plugins-release" }
+    }
+
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+
+apply plugin: 'java'
+
+apply plugin: 'eclipse-wtp'
+apply plugin: 'idea'
+
+apply plugin: 'org.springframework.boot'
+
+version = '1.0'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+    maven { url "http://repo.spring.io/milestone" }
+    maven { url "http://repo.spring.io/snapshot" }
+}
+
+dependencies {
+    // Spring Boot
+    compile "org.springframework.boot:spring-boot-starter-web:${springBootVersion}"
+    compile "org.springframework.boot:spring-boot-starter-actuator:${springBootVersion}"
+    compile "org.springframework.boot:spring-boot-starter-data-jpa:${springBootVersion}"
+    compile "org.springframework.boot:spring-boot-starter-data-mongodb:${springBootVersion}"
+    compile "org.springframework.boot:spring-boot-starter-data-redis:${springBootVersion}"
+
+    // Spring Cloud Connectors
+    compile "org.springframework.cloud:spring-cloud-core:${springCloudCoreVersion}"
+    compile "org.springframework.cloud:spring-cloud-spring-service-connector:${springCloudConnectorsVersion}"
+    compile "org.springframework.cloud:spring-cloud-cloudfoundry-connector:${springCloudConnectorsVersion}"
+    compile "org.springframework.cloud:spring-cloud-heroku-connector:${springCloudConnectorsVersion}"
+
+    // JPA Persistence
+    compile "org.apache.commons:commons-dbcp2:2.5.0"
+    runtime "com.h2database:h2:1.4.197"
+    runtime "mysql:mysql-connector-java:8.0.13"
+    runtime "org.postgresql:postgresql:42.2.5"
+
+    // Redis Persistence
+    compile "redis.clients:jedis:2.9.0"
+
+    // Webjars
+    compile "org.webjars:bootstrap:3.1.1"
+    compile "org.webjars:angularjs:1.2.16"
+    compile "org.webjars:angular-ui:0.4.0-2"
+    compile "org.webjars:angular-ui-bootstrap:0.10.0-1"
+    compile "org.webjars:jquery:2.1.0-2"
+
+    // Testing
+    testCompile "junit:junit"
+
+    // AWS
+    compile "com.amazonaws:aws-java-sdk:1.11.446"
+}
+
+jar {
+    baseName = "spring-music"
+    version = "" // omit the version from the war file name
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '4.10.2'
+}

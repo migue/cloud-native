@@ -1,0 +1,14 @@
+/etc/systemd/system/spring-music.service
+
+[Unit]
+Description="Spring Music Application"
+
+[Service]
+WorkingDirectory=/opt/spring-music
+ExecStart=/opt/spring-music/start.sh
+ExecStop=/bin/kill -TERM $MAINPID
+Type=simple
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

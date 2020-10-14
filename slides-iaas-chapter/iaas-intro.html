@@ -1,0 +1,1940 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=1024, user-scalable=no">
+
+	<title>IaaS fundalmentals for developers</title>
+	
+	<!-- Required stylesheet -->
+	<link rel="stylesheet" href="core/deck.core.css">
+	
+	 <!-- fonts -->
+    <link rel='stylesheet' href='http://fonts.googleapis.com/css?family=PT+Sans:400,700,400italic,700italic|PT+Sans+Narrow:400,700|Ubuntu+Mono:400,700' type='text/css'>
+
+	<link rel="stylesheet" href="extensions/goto/deck.goto.css">
+	<link rel="stylesheet" href="extensions/menu/deck.menu.css">
+	<link rel="stylesheet" href="extensions/navigation/deck.navigation.css">
+	<link rel="stylesheet" href="extensions/status/deck.status.css">
+	<link rel="stylesheet" href="extensions/hash/deck.hash.css">
+	<link rel="stylesheet" href="extensions/scale/deck.scale.css">
+
+	<!-- Style theme. More available in /themes/style/ or create your own. -->
+	<link rel="stylesheet" href="themes/style/web-2.0.css">
+	
+	<link rel="stylesheet" id="transition-theme-link" href="themes/transition/fade.css">   
+    <link rel="stylesheet" id="style-theme-link" href="liferay.css">
+	
+	<script src="jquery-1.7.2.min.js"></script>
+    <script src="modernizr.custom.js"></script>
+    <script src="core/deck.core.js"></script>
+    <script src="extensions/hash/deck.hash.js"></script>
+    <script src="extensions/menu/deck.menu.js"></script>
+    <script src="extensions/goto/deck.goto.js"></script>
+    <script src="extensions/status/deck.status.js"></script>
+
+    <link rel="stylesheet" href="solarized_light.css">
+    <script src="highlight.pack.js"></script>
+
+   <script>
+    $(document).ready(function() {
+            $.deck('.slide');
+            $('pre').each(function(i, e) {
+                    hljs.highlightBlock(e, '  ');
+            });
+            $('code').each(function(i, e) {
+                    hljs.highlightBlock(e);
+            });
+    });
+    </script>
+</head>
+
+<body class="deck-container">
+
+<p class="deck-status">slide <span class="deck-status-current"></span> / <span class="deck-status-total"></span></p>
+
+<section class="slide" style="font-size: 100%">
+   <h1>
+    <div>IaaS fundamentals for developers</div>
+    <div style="font-size: 38%">A practical overview of IaaS fundamentals</div>
+    <br/>
+    <div style="font-size: 50%">Miguel Pastor</div>
+    <div style="font-size: 50%">miguelinlas3@gmail.com</div>
+    <div style="font-size: 50%">Twitter handler: <a href="http://twitter.com/miguelinlas3">miguelinlas3</a></div>
+    <div style="font-size: 50%"><br/></div>
+   </h1>
+</section>
+
+<section class="slide" style="margin-left:11%">
+	<h2>A little bit about me</h2>
+	<ul>
+		<div class="slide">
+			<li>Cloud computing and distributed systems</li>
+		</div>		
+		<div class="slide">
+			<li>Interests in concurrent and distributed programming. Functional programming advocate!
+		</div>
+		<div class="slide">
+			<li>PHD student? (on stand by for a while)</li>
+		</div>		
+		<div class="slide">
+			<li>Twitter handler: <a href="http://twitter.com/miguelinlas3">miguelinlas3</a></li>
+		</div>
+		<div class="slide">
+			<li>Email address: miguelinlas3@gmail.com</li>
+		</div>		
+	</ul>
+</section>
+
+<section class="slide">
+	<h1>What will we talking about?</h1>
+</section>
+
+<section class="slide" style="margin-left:11%">
+	<h2>Agenda</h2>
+	<ul>
+		<div class="slide">
+			<li>Introduction to Cloud Computing</li>
+		</div>
+		<div class="slide">
+			<li>IaaS fundamentals</li>
+			<div class="slide">	
+				<ul>			
+					<div class="slide">	
+						<li>What it is a IaaS?</li>
+					</div>
+					<div class="slide">	
+						<li>How it works?</li>
+					</div>
+					<div class="slide">	
+						<li>Common services</li>
+					</div>
+					<div class="slide">	
+						<li>Alternatives</li>
+					</div>
+				<ul>
+			</div>
+		</div>
+		<div class="slide">
+				<li>A real example: deploying and scaling our application</li>
+		</div>
+		<div class="slide">
+			<li>Questions and answers</li>
+		</div>
+	</ul>
+</section>
+
+<section class="slide">
+	<h1>
+		Cloud!??
+		<div style="font-size: 50%">What is this about</div>
+	</h1>
+</section>
+
+<section class="slide" >
+	<div class="slide" style="margin-left:11%">
+		<h2>Cloud Computing definition</h2>
+			<blockquote cite="http://en.wikipedia.org/wiki/Cloud_computing">
+				Cloud computing is the use of computing resources (hardware and software) that are delivered as a service over a network (typically the Internet).   		
+	  			<p><cite><a href="">Wikipedia</a></cite></p>
+			</blockquote>
+	</div>
+	<div class="slide" style="margin-left:11%">
+		<h2>Cloud foundations</h2>
+		<div class="slide">
+			<h3>Computational resources</h3>
+			<ul>
+				<div class="slide">
+					<li><p>Resource pool</p></li>
+				</div>
+				<div class="slide">
+					<li><p>Subscription</p></li>
+				</div>
+				<div class="slide">
+					<li><p>Deployment alternatives: managed, external and Cloud</p></li>
+				</div>
+			</ul>				
+		</div>	
+	</div>	
+</section>
+
+<section class="slide" >
+	<div class="slide" style="margin-left:11%">
+		<h2>Cloud foundations</h2>				
+			<div class="slide">
+				<h3>Virtualization</h3>
+				<ul>
+					<div class="slide">
+						<li><p>Nothing new: 5-10 years</p></li>
+					</div>
+					<div class="slide">
+						<li><p>Mainstay: Millions of servers</p></li>
+					</div>
+					<div class="slide">
+						<li><p><italic>Commodity hardware</italic> usage</p></li>
+					</div>
+				</ul>	
+			</div>
+			<div class="slide">
+				<h3>Elasticity</h3>
+				<ul>
+					<div class="slide">
+						<li><p>Dynamic scaling</p></li>
+					</div>
+					<div class="slide">
+						<li><p>Resources usage is regulated</p></li>
+					</div>
+					<div class="slide">
+						<li><p>Traditionally over-provisioning is done. Slow and costly</p></li>
+					</div>
+				</ul>	
+			</div>
+			<div class="slide">
+				<h3>Automatic provisioning</h3>								
+				<ul>
+					<div class="slide">
+						<li><p>All operations are done via API</p></li>
+					</div>
+					<div class="slide">
+						<li><p>Dymically: based on the requirements</p></li>
+					</div>
+					<div class="slide">
+						<li><p>Handling unexpected conditions</p></li>
+					</div>
+					<div class="slide">
+						<li><p>Pay for use!</p></li>
+					</div>
+				</ul>			
+			</div>
+			<div class="slide">
+				<h3>Measurement and paying</h3>
+				<ul>
+					<div class="slide">
+						<li><p>Pay for use!</p></li>
+					</div>
+					<div class="slide">
+						<li><p>Balanced competition!</p></li>
+					</div>
+
+				</ul>	
+			</div>		
+	</div>
+</section>
+
+<section class="slide">
+	<h1>Do I really need the Cloud??</h1>
+</section>
+
+<section class="slide" style="margin-left:11%">
+	<h2>Myth or reallity?</h2>
+	<div class="slide"><h3>Trending topic</h3></div>
+	<div class="slide"><h3>Our CIO says we need to be there</h3></div>
+	<div class="slide"><h3>Faster time to market</h3></div>
+	<div class="slide"><h3>Access to pooled resources</h3></div>
+	<div class="slide"><h3>Hybrid IT</h3></div>
+</section>
+
+<section class="slide">
+	<h1>Cloud models</h1>
+</section>
+
+<section class="slide">
+	<h1>Infrastructure as a Service</h1>
+</section>
+
+<section class="slide" style="margin-left:11%">
+	<h2>Infrastructure as a Service</h2>
+	<div class="slide"><h3>Lowest level of abstraction</h3></div>
+	<div class="slide">
+		<h3>Everything is exposed as a service</h3>
+		<ul>
+			<div class="slide">
+				<li><p>Virtual machines</p></li>
+			</div>
+			<div class="slide">
+				<li><p>Load Balancers</p></li>
+			</div>
+			<div class="slide">
+				<li><p>Firewalls</p></li>
+			</div>
+			<div class="slide">
+				<li><p>Storage systems (databases, . . .)</p></li>
+			</div>
+		</ul>	
+	</div>
+</section>
+
+<section class="slide" style="font-size: 100%">
+   <h1>
+    	<div>Going deeper into the AWS platform</div>
+   </h1>
+</section>
+
+<section class="slide" style="margin-left:11%">
+	<div class="slide">
+		<h2>Main concepts</h2>	
+	</div>
+   <div class="slide">
+   		<h3>Set of services that provide programmatic access to Amazon's ready-to-use computing infrastructure</h3>
+   </div>	
+	<div class="slide">
+   		<h3>Accesible through the Internet</h3>
+   </div>
+	<div class="slide">
+   		<h3>Huge amount of available services (we will not cover all of them)</h3>
+   </div>
+	<div class="slide">
+   		<h3>Architect complex and diverse range of applications on top of the reliable building blocks</h3>
+   </div>
+	<div class="slide">
+   		<h3>Pay as you go model; based on your usage</h3>
+   </div>
+	<div class="slide">
+   		<h3>No maintenance cost; hardware is mantained by Amazon</h3>
+   </div>
+	<div class="slide">
+   		<h3>Elasticity: scaling up and down based on the demand</h3>
+   </div>
+   	<div class="slide">
+   		<h3>Focus on your business ideas.</h3>
+   </div>
+	<div class="slide">
+   		<h3>Forget about managing your own datacenter. Amazon worries about the mundane details of the hardware and infrastructure </h3>
+   </div>   
+</section>
+
+
+<section class="slide" style="font-size: 100%">
+   <h1>
+    	<div>Scalable architecture</div>
+   </h1>
+</section>
+
+<section class="slide" style="margin-left:11%">
+	<div class="slide">
+		<h2>Reliability</h2>	
+	</div>
+   <div class="slide">
+   		<h3>Battle-tested, highly available data centers that run Amazon's own business</h3>
+   </div>
+
+	<div class="slide">
+   		<h2>Security</h2>
+   </div>
+	<div class="slide">
+   		<h3>Out of the box basic security and authentication mechanisms are available</h3>
+   </div>
+
+	<div class="slide">
+   		<h2>Cost benefits</h2>
+   </div>
+	<div class="slide">
+   		<h3>No fixed costs or maintenance costs: pay for services as you go, scale your resources as needed</h3>
+   </div>
+
+	<div class="slide">
+   		<h2>Ease of development</h2>
+   </div>
+	<div class="slide">
+   		<h3>Simple APIs let you harness the full power of this virtual infrastructure and libraries, available in most widely used programming languages</h3>
+   </div>
+
+   	<div class="slide">
+   		<h2>Elasticity</h2>
+   </div>
+	<div class="slide">
+   		<h3>Scale your computing resources up or down based on demand</h3>
+   </div>
+
+   	<div class="slide">
+   		<h2>Cohesiveness</h2>
+   </div>
+	<div class="slide">
+   		<h3>Core building-block services (storage, computing, messaging, and data storage) are designed from the ground up to work extremely well together</h3>
+   </div>
+</section>
+
+<section class="slide" style="font-size: 100%">
+   <h1>
+    	<div>Amazon Web Services main services</div>
+    	<div style="font-size: 38%">We will cover a few ones</div>
+   </h1>
+</section>
+
+<section class="slide" style="margin-left:11%">
+	<div class="slide">
+		<h2>Storage service: Amazon S3</h2>	
+	</div>
+   	<div class="slide">
+   		<h3>Storage for files, documents, user downloads, backups, ...</h3>
+   </div>
+   	<div class="slide">
+   		<h3>Take advantage of scalable, reliable and highly available low-cost storage</h3>
+   </div>
+	<div class="slide">
+		<h2>Computing service: Amazon EC2</h2>	
+	</div>
+   	<div class="slide">
+   		<h3>Ability to scale your computing resources up or down based on demand </h3>
+   </div>
+   	<div class="slide">
+   		<h3>Provisioning new server instances very easy</h3>
+   </div>
+	<div class="slide">
+		<h2>Messaging service: Amazon SQS</h2>	
+	</div>
+   	<div class="slide">
+   		<h3>Decouple your application components</h3>
+   </div>
+   	<div class="slide">
+   		<h3>Unlimited reliable messaging provided</h3>
+   </div>
+ 	<div class="slide">
+		<h2>Storage: Amazon simple DB</h2>			
+	</div>
+   	<div class="slide">
+   		<h3>Scalable, indexed, zero-maintenance storage</h3>
+   </div>
+   	<div class="slide">
+   		<h3>Processing and querying mechanism</h3>
+   </div>      
+</section>
+
+<section class="slide" style="margin-left:11%">
+	<div class="slide">
+		<h2>Monitoring service: Amazon Cloudwatch</h2>	
+	</div>
+   	<div class="slide">
+   		<h3>Reliable, scalable, and flexible monitoring for AWS cloud</h3>
+   </div>
+   	<div class="slide">
+   		<h3>Collect and track metrics, gain insight, and react immediately</h3>
+   </div>
+   	<div class="slide">
+   		<h3>Programmatically retrieve your monitoring data, view graphs, and set alarms</h3>
+   </div>
+
+	<div class="slide">
+		<h2>Relational data storage: Amazon RDS</h2>	
+	</div>
+   	<div class="slide">
+   		<h3>Easy to set up, operate, and scale a relational database in the cloud</h3>
+   </div>
+   	<div class="slide">
+   		<h3>MySQL, Oracle, Microsoft SQL Server, or PostgreSQL</h3>
+   </div>
+   	<div class="slide">
+   		<h3>Backup, restoring, multizone, replication, ...</h3>
+   </div>
+
+	<div class="slide">
+		<h2>Content delivery network: Amazon CloudFront</h2>	
+	</div>
+   	<div class="slide">
+   		<h3>Content delivery web service</h3>
+   </div>
+   	<div class="slide">
+   		<h3>Distribute contents to users with low latency and high transfer data speeds</h3>
+   </div>
+
+	<div class="slide">
+		<h2>And many more ...</h2>	
+	</div>
+   	<div class="slide">
+   		<h3>Amazon SES, Elastic cache, Elastic MapReduce, Cloud Search, Dynamic Transcoder, ...</h3>
+   </div>
+</section>
+
+<section class="slide">
+	<h1>Amazon S3 fundamentals</h1>
+</section>
+
+<section class="slide" style="margin-left:11%">
+	<div class="slide">
+		<h2>S3 main feature set</h2>	
+	</div>
+   	<div class="slide">
+   		<h3>Write, read, and delete objects containing from 1 byte to 5 terabytes of data each</h3>
+   </div>
+    <div class="slide">
+   		<h3>Objects are stored in a bucket and retrieved via a unique, developer-assigned key.</h3>
+   </div>
+    <div class="slide">
+   		<h3>A bucket can be stored in one of several regions</h3>
+   </div>
+    <div class="slide">
+   		<h3>Transfer between regions needs to be explicit</h3>
+   </div>
+    <div class="slide">
+   		<h3>Authentication and authorization mechanisms</h3>
+   </div>
+    <div class="slide">
+   		<h3>REST and SOAP interfaces</h3>
+   </div>
+    <div class="slide">
+   		<h3>HTTP is the default protocol: you can use BitTorrent</h3>
+   </div>
+    <div class="slide">
+   		<h3>Reliable</h3>
+   </div>
+
+	<div class="slide">
+		<h2>Common use cases</h2>	
+	</div>
+	<div class="slide">
+		<h3>Content Storage and Distribution</h3>
+	</div>
+	<div class="slide">
+		<h3>Storage for data analysis</h3>
+	</div>
+	<div class="slide">
+		<h3>Backup, archiving and disaster recovery</h3>
+	</div>
+	<div class="slide">
+		<h3>Static web hosting</h3>
+	</div>
+</section>
+
+<section class="slide" style="margin-left:11%">
+	<div class="slide">
+		<h2>S3 design Requirements</h2>	
+	</div>
+   	<div class="slide">
+   		<h3>Secure. Full control over who has access to their data</h3>
+   </div>
+    <div class="slide">
+   		<h3>Reliable.  Store data with up to 99.999999999% durability, with 99.99% availability.</h3>
+   </div>
+    <div class="slide">
+   		<h3>Scalable. Scale in terms of storage, request rate, and users to support an unlimited number of web-scale applications</h3>
+   </div>
+    <div class="slide">
+   		<h3>Fast. Fast enough to support high-performance applications</h3>
+   </div>
+    <div class="slide">
+   		<h3>Inexpensive. Built from inexpensive commodity hardware components</h3>
+   </div>
+    <div class="slide">
+   		<h3>Simple. Building highly scalable, reliable, fast, and inexpensive storage is difficult</h3>
+   </div>
+</section>
+
+<section class="slide">
+	<h1>Getting familiar with Amazon S3 through the AWS command line</h1>
+</section>
+
+<section class="slide" style="margin-left:11%">
+	<div class="slide">
+		<h2>Checking our environment</h2>	
+	</div>
+	<div class="slide">
+		<h3>Verify we have the AWS cli already installed</h3>	
+	</div>
+	<div class="slide">
+		<pre class="shell">
+aws
+		</pre>
+	</div>
+	<div class="slide">
+		<h3>Configure the credentials</h3>	
+	</div>
+	<div class="slide">
+		<pre class="shell">
+aws configure
+		</pre>
+	</div>
+</section>
+
+<section class="slide" style="margin-left:11%">
+	<div class="slide">
+		<h2>Basic operations with buckets</h2>	
+	</div>
+	<div class="slide">
+		<h3>Listing our buckets</h3>	
+	</div>
+	<div class="slide">
+		<pre class="shell">
+# Will list all buckets across all regions
+aws s3api list-buckets
+		</pre>
+	</div>
+	<div class="slide">
+		<h3>Creating a new bucket</h3>	
+	</div>
+	<div class="slide">
+		<pre class="shell">
+aws s3api create-bucket --bucket migue.bucket --create-bucket-configuration LocationConstraint=eu-central-1
+		</pre>
+	</div>
+	<div class="slide">
+		<h3>Deleting an existing bucket</h3>	
+	</div>
+	<div class="slide">
+		<pre class="shell">
+aws s3api delete-bucket --bucket migue.bucket
+		</pre>
+	</div>
+	<div class="slide">
+		<h3>Get the logging status of your bucket</h3>	
+	</div>
+	<div class="slide">
+		<pre class="shell">
+aws s3api get-bucket-logging --bucket migue.bucket<value>
+		</pre>
+	</div>
+	<div class="slide">
+		<h3>Retrieve the location of your bucket</h3>	
+	</div>
+	<div class="slide">
+		<pre class="shell">
+aws s3api get-bucket-location --bucket migue.bucket<value>
+		</pre>
+	</div>
+</section>
+
+<section class="slide" style="margin-left:11%">
+	<div class="slide">
+		<h2>Basic operations with objects (I)</h2>	
+	</div>
+	<div class="slide">
+		<h3>Creating a new object</h3>	
+	</div>
+	<div class="slide">
+		<pre class="shell">
+# The cli automatically uses multipart upload for large files	
+aws s3api put-object --bucket migue.bucket --key files/a.txt --body a.txt
+		</pre>
+	</div>
+	<div class="slide">
+		<h3>Deleting an existing object</h3>	
+	</div>
+	<div class="slide">
+		<pre class="shell">
+aws s3api delete-object --bucket migue.bucket --key files/a.txt --region=eu-central-1
+		</pre>
+	</div>
+	<div class="slide">
+		<h3>Deleting multiple objects</h3>	
+	</div>
+	<div class="slide">
+		<pre class="shell">
+aws s3api delete-objects --bucket my-bucket --delete json-structure
+
+# We can use json structures
+{
+  "Objects": [
+    {
+      "Key": "x",
+      "VersionId": "1"
+    }
+    ,
+    {
+      "Key": "y",
+      "VersionId": "2"
+    }
+  ],
+  "Quiet": true|false
+}
+		</pre>
+	</div>
+</section>
+
+<section class="slide" style="margin-left:11%">
+	<div class="slide">
+		<h2>Basic operations with objects (II)</h2>	
+	</div>
+	<div class="slide">
+		<h3>Retrieving an existing object</h3>	
+	</div>
+	<div class="slide">
+		<pre class="shell">
+aws s3api get-object --bucket migue.bucket --key files/a.txt downloaded.txt
+		</pre>
+	</div>
+	<div class="slide">
+		<h3>Retrieving the torrent file of an existing object</h3>	
+	</div>
+	<div class="slide">
+		<pre class="shell">
+aws s3api get-object-torrent --bucket migue.bucket --key files/a.txt download.torrent
+		</pre>
+	</div>
+	<div class="slide">
+		<h2>Exercice: Play a little bit more with the aws cli s3api</h2>	
+	</div>
+	<div class="slide">
+		<h3>Get/put ACLs</h3>
+	</div>
+	<div class="slide">
+		<h3>Get/put object's metadata</h3>
+	</div>
+	<div class="slide">
+		<h3>Get/put object's versions</h3>
+	</div>
+	<div class="slide">
+		<h3>...</h3>
+	</div>
+</section>
+
+<section class="slide">
+	<h1>Exercice: Using Amazon S3 our Spring application's storage</h1>
+</section>
+
+<section class="slide">
+	<h1>Amazon EC2 fundamentals</h1>
+</section>
+
+<section class="slide" style="margin-left:11%">
+	<div class="slide">
+		<h2>EC2 service highlights</h2>	
+	</div>
+   	<div class="slide">
+   		<h3>Elastic web scale computing. Increase or decrease capacity within minutes (automatically) </h3>
+   </div>
+    <div class="slide">
+   		<h3>Completely controlled. Root access to every new machine you spawn</h3>
+   </div>
+    <div class="slide">
+   		<h3>Flexible cloud hosting services. Choice of instance types, operating systems and software</h3>
+   </div>
+    <div class="slide">
+   		<h3>Highly interopable with other Amazon services like Amazon S3, Amazon RDS) SimpleDB or Amazon SQS among others</h3>
+   </div>
+   <div class="slide">
+   		<h3>Reliable. Highly reliable environment where replacement instances can be rapidly and predictably commissioned</h3>
+   </div>
+    <div class="slide">
+   		<h3>Secure. Works in conjuction with Amazon VPC</h3>
+   			<ul>
+	   			<div class="slide">
+	   				<p>Compute instances are located in a Virtual Private Cloud (VPC)</p>
+	   			</div>
+	   			<div class="slide">
+	   				<p>Security Groups and networks ACLs</p>
+	   			</div>
+	   			<div class="slide">
+	   				<p>Connect your existing IT infrastructure to resources in your VPC (using IPsec VPN connections)</p>
+	   			</div>
+	   			<div class="slide">
+	   				<p>Provision your EC2 resources as Dedicated Instances</p>
+	   			</div>
+	   		</ul>
+   </div>
+
+    <div class="slide">
+   		<h3>Inexpensive.</h3>
+   			<ul>
+	   			<div class="slide">
+	   				<p>On demand instances.</p>
+	   			</div>
+	   			<div class="slide">
+	   				<p>Reserved instances</p>
+	   			</div>
+	   			<div class="slide">
+	   				<p>Spot instances</p>
+	   			</div>
+	   		</ul>
+   </div>
+
+    <div class="slide">
+   		<h3>Easy to start</h3>
+   </div>
+</section>
+
+<section class="slide">
+	<h1>Amazon EC2 main features</h1>
+</section>
+
+<section class="slide" style="margin-left:11%">
+   	<div class="slide">
+   		<h2>Amazon Elastic Block Store (EBS)</h2>
+   </div>
+
+   	<div class="slide">
+   		<h3>Persistent storage<h3>
+   </div>
+
+    <div class="slide">
+   		<h3>Network attached</h3>
+   </div>
+
+   	<div class="slide">
+   		<h3>Highly available and highly reilable</h3>
+   </div>
+
+    <div class="slide">
+   		<h3>Can be used as a boot partition or attached to a running instance</h3>
+   </div>
+
+    <div class="slide">
+   		<h3>Create snapshots and replicate them through all your availability zones</h3>
+   </div>
+
+    <div class="slide">
+   		<h3>Two volumes types: Standar and provisioned IOPS</h3>
+   </div>
+
+   	<div class="slide">
+   		<h2>EBS optimized instances</h2>
+   </div>
+
+   	<div class="slide">
+   		<h3>Enable EC2 instances to fully utilize the IOPS provisioned on an EBS volume<h3>
+   </div>
+
+    <div class="slide">
+   		<h3>Dedicated throughput between Amazon EC2 and Amazon EBS [500 Mbps,1000 Mbps]</h3>
+   </div>
+
+   	<div class="slide">
+   		<h2>Multiple locations</h2>
+   </div>
+
+   	<div class="slide">
+   		<h3>Ability to place instances in multiple locations<h3>
+   </div>
+
+   <div class="slide">
+   		<h3>Composed of Regions and Availability Zones</h3>
+   </div>
+
+   <div class="slide">
+   		<h3>Goal is prevent your applications from failures in a single location</h3>
+   </div>
+
+   <div class="slide">
+   		<h3>Current regions: US East (Northern Virginia), US West (Oregon), US West (Northern California), EU (Ireland), EU (Frankfurt), Asia Pacific (Singapore), Asia Pacific (Tokyo), Asia Pacific (Sydney), South America (Sao Paulo)</h3>
+   </div>
+</section>
+
+<section class="slide" style="margin-left:11%">
+   	<div class="slide">
+   		<h2>Elastic IP Addresses</h2>
+   </div>
+
+   	<div class="slide">
+   		<h3>Static IP addresses designed for dynamic cloud computing<h3>
+   </div>
+
+    <div class="slide">
+   		<h3>Associated with your account, not with specific instances</h3>
+   </div>
+
+   	<div class="slide">
+   		<h2>Amazon Virtual Private Cloud</h2>
+   </div>
+
+   	<div class="slide">
+   		<h3>Launch your resources in a virtual network that you define<h3>
+   </div>
+
+    <div class="slide">
+   		<h3>Full control over your virtual networking environment</h3>
+   </div>
+
+    <div class="slide">
+   		<h3>Create a Hardware Virtual Private Network (VPN) connection between your corporate datacenter and your VPC</h3>
+   </div>
+
+   	<div class="slide">
+   		<h2>Amazon Cloud Watch</h2>
+   </div>
+
+   	<div class="slide">
+   		<h3>Monitoring for AWS cloud resources and applications<h3>
+   </div>
+
+   <div class="slide">
+   		<h3>Resource utilization, operational performance, and overall demand patterns—including metrics such as CPU utilization, disk reads and writes, and network traffic</h3>
+   </div>
+
+   <div class="slide">
+   		<h3>Get statistics, view graphs, and set alarms for your metric data</h3>
+   </div>
+
+   	<div class="slide">
+   		<h2>Amazon Autoscaling</h2>
+   </div>
+
+   	<div class="slide">
+   		<h3>Automatically scale your Amazon EC2 capacity up or down <h3>
+   </div>
+
+   <div class="slide">
+   		<h3>Ensure number of instances scales up during demand spikes, and scales down automatically during demand lulls to minimize costs</h3>
+   </div>
+</section>
+
+<section class="slide" style="margin-left:11%">
+   	<div class="slide">
+   		<h2>Elastic load balancing</h2>
+   </div>
+
+   	<div class="slide">
+   		<h3>Automatically distributes incoming application traffic<h3>
+   </div>
+   	<div class="slide">
+   		<h3>Detects unhealthy instances within a pool and automatically reroutes traffic to healthy instances<h3>
+   </div>
+   	<div class="slide">
+   		<h3>We can use Amazon Cloudwatch to monitor operational metrics (number of request, latency, ...)<h3>
+   </div>
+
+   	<div class="slide">
+   		<h2>High Performance Computing (HPC) Clusters</h2>
+   </div>
+
+   	<div class="slide">
+   		<h3>Complex computational workloads, or with applications sensitive to network performance<h3>
+   </div>
+
+   	<div class="slide">
+   		<h3>Increased throughput<h3>
+   </div>
+
+   	<div class="slide">
+   		<h2>GPU instances</h2>
+   </div>
+
+   	<div class="slide">
+   		<h3>High parallel performance capability<h3>
+   </div>
+
+   	<div class="slide">
+   		<h3>Access to NVIDIA GPUs each with up to 1,536 CUDA cores and 4GB of video memory<h3>
+   </div>
+
+   	<div class="slide">
+   		<h2>High I/O Instances</h2>
+   </div>
+
+   	<div class="slide">
+   		<h3>High, low latency, random I/O access to the data<h3>
+   </div>
+
+   	<div class="slide">
+   		<h3>Random I/O rates over 100,000 IOPS<h3>
+   </div>
+
+	<div class="slide">
+   		<h3>Backed by Solid State Disk (SSD) technology<h3>
+   </div>
+
+	<div class="slide">
+   		<h3>Suited for running very high performance NoSQL and relational databases<h3>
+   </div>
+</section>
+
+<section class="slide" style="margin-left:11%">
+   	<div class="slide">
+   		<h2>High Storage Instances</h2>
+   </div>
+   	<div class="slide">
+   		<h3>High storage density per instance<h3>
+   </div>
+   	<div class="slide">
+   		<h3>High sequential I/O for data-intensive applications<h3>
+   </div>
+   	<div class="slide">
+   		<h3>Sequential I/O throughout of 2.4 GB/s and 48 TB of instance storage across 24 hard disk drives<h3>
+   </div>
+
+   	<div class="slide">
+   		<h2>Virtual machine import/export</h2>
+   </div>
+   	<div class="slide">
+   		<h3>Import virtual machine images from your existing environment and export them back<h3>
+   </div>
+   	<div class="slide">
+   		<h3>Leverage your existing investments in virtual machines<h3>
+   </div>
+
+   	<div class="slide">
+   		<h2>AWS marketplace</h2>
+   </div>
+   	<div class="slide">
+   		<h3>Online store that helps you find, buy and quickly deploy software<h3>
+   </div>
+   	<div class="slide">
+   		<h3>1-Click deployment to quickly launch pre-configured software<h3>
+   </div>
+
+   	<div class="slide">
+   		<h2>Enhanced Networking</h2>
+   </div>
+   	<div class="slide">
+   		<h3>Higher packet per second (PPS) performance<h3>
+   </div>
+   	<div class="slide">
+   		<h3>Lower network jitter and lower latencies<h3>
+   </div>
+   	<div class="slide">
+   		<h3>New network virtualization stack that provides higher I/O performance and lower CPU utilization<h3>
+   </div>
+</section>
+
+<section class="slide">
+	<h1>
+		Deploying our application in AWS
+		<div style="font-size: 55%">Using the graphical console</div>
+	</h1>
+</section>
+
+<section class="slide" style="margin-left:11%">
+	<div class="slide">
+		<h2>Open our <a href="https://console.aws.amazon.com/console/home">Amazon management console</a></h2>
+	</div>
+
+	<div class="slide">
+		<h2>Navigate to the EC2 section</h2>
+	</div>
+
+	<div class="slide">
+		<ul>
+			<h3>Click the launch instance button</h3>
+		</ul>
+	</div>
+
+	<div class="slide">
+		<h2>Chose an Amazon Machine Image</h2>
+	</div>
+	<div class="slide">
+		<ul>
+			<h3>Ubuntu Server 18.04 LTS (HVM), SSD Volume Type (64-bit)</h3>
+		</ul>
+	</div>
+
+	<div class="slide">
+		<h2>Select the type of the instance we want to spawn</h2>
+	</div>
+	<div class="slide">
+		<ul>
+			<h3>We will choose a micro instance type (t2.micro) since this is not a real production environment</h3>
+		</ul>
+	</div>
+
+	<div class="slide">
+		<h2>Configure some of the instance details</h2>
+	</div>
+	<div class="slide">
+		<ul>
+			<h3>We will use the defaults</h3>
+		</ul>
+	</div>
+
+	<div class="slide">
+		<h2>Configure the storage</h2>
+	</div>
+	<div class="slide">
+		<ul>
+			<h3>The AMI we have previously selected is an EBS backed image so we are fine for now</h3>
+		</ul>
+	</div>
+
+	<div class="slide">
+		<h2>Tagging our instance</h2>
+	</div>
+	<div class="slide">
+		<ul>
+			<h3>We can skip this step</h3>
+		</ul>
+	</div>
+</section>
+
+<section class="slide" style="margin-left:11%">
+	<div class="slide">
+		<h2>Configure our security groups</a></h2>
+	</div>
+	<div class="slide">
+		<ul>
+			<h3>We can use the default settings for now</h3>
+		</ul>
+	</div>
+
+	<div class="slide">
+		<h2>Review all your settings and start the instance</h2>
+	</div>
+</section>
+
+<section class="slide">
+	<h1>Installing the required software</h1>
+</section>
+
+<section class="slide" style="margin-left:11%">
+
+	<div class="slide">
+		<h2>Connect to the new created instance through ssh</a></h2>
+	</div>
+	<div class="slide">
+		<pre class="shell">
+ssh-add /path/to/file.pem
+ssh ubuntu@public-dns
+		</pre>
+	</div>
+
+	<div class="slide">
+		<h2>Install an Open JDK</h2>
+	</div>
+
+	<div class="slide">
+		<pre class="shell">
+sudo apt-get update
+sudo apt-get install openjdk-8-jre-headless
+		</pre>
+	</div>
+
+	<div class="slide">
+		<h2>Upload our application</h2>
+	</div>
+
+	<div class="slide">
+		<h3>Local machine</h3>
+		<pre class="shell">
+./gradlew assemble
+
+scp build/libs/spring-music-1.0.jar ubuntu@public-dns:/tmp
+		</pre>
+	</div>
+
+	<div class="slide">
+		<h3>Remote machine</h3>
+		<pre class="shell">
+sudo mkdir /opt/spring-music/ && sudo cp /tmp/spring-music-1.0.jar /opt/spring-music
+		</pre>
+	</div>
+</section>
+
+<section class="slide">
+	<h1>Deploying our application</h1>
+</section>
+
+<section class="slide" style="margin-left:11%">
+	<div class="slide">
+		<h2>Allow the http inbound traffic (80)</a></h2>
+	</div>
+	<div class="slide">
+		<h3>Go to the security group our instance is using</a></h3>
+	</div>
+	<div class="slide">
+		<h3>Add a new inbound rule allowing the inbound http traffic</a></h3>
+	</div>
+	<div class="slide">
+		<h3>Create a startup script</h3>
+		<pre class="shell">
+cd /opt/spring-music/ && touch start.sh
+		</pre>
+	</div>
+	<div class="slide">
+		<h3>Type the command required to start our app</h3>
+		<pre class="shell">
+java -jar spring-music-1.0.jar
+		</pre>
+	</div>
+	<div class="slide">
+		<h3>Does it work? What are we missing?</h3>
+		<pre class="shell">
+java -Dserver.port=80 -jar spring-music-1.0.jar
+		</pre>
+	</div>
+</section>
+
+<section class="slide" style="margin-left:11%">
+	<div class="slide">
+		<h2>Create a Systemd file</h2>
+	</div>
+	<div class="slide">
+		<div class="slide"><h3>Create the file vim /etc/systemd/system/spring-music.service</h3>
+			<pre class="shell">
+[Unit]
+Description="Spring Music Application"
+
+[Service]
+WorkingDirectory=/opt/spring-music
+ExecStart=/opt/spring-music/start.sh
+ExecStop=/bin/kill -TERM $MAINPID
+Type=simple
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+
+			</pre>
+		</div>
+		<div class="slide"><h3>Configure systemd</h3>
+			<pre class="shell">
+sudo systemctl daemon-reload
+sudo systemctl enable spring-music.service
+			</pre>
+		</div>
+	</div>
+
+	<div class="slide">
+		<h2>Point your browser to the public dns address of your instance</h2>
+	</div>
+</section>
+
+<section class="slide">
+	<h1>Amazon RDS fundamentals</h1>
+</section>
+
+<section class="slide" style="margin-left:11%">
+	<div class="slide">
+		<h2>RDS service highlights</h2>	
+	</div>
+   	<div class="slide">
+   		<h3>Simple to deploy. Production-ready relational database in minutes</h3>
+   </div>
+    <div class="slide">
+   		<h3>Managed. The service deals with backups, patch management, and replication</h3>
+   </div>
+    <div class="slide">
+   		<h3>Compatible. Get native access to a relational database</h3>
+   </div>
+    <div class="slide">
+   		<h3>Fast predictable performance. Provisioned IOPS is a high performance storage:delivers fast, predictable, and consistent performance</h3>
+   </div>
+   <div class="slide">
+   		<h3>Scalable. Provision and scale the storage up to 3TB and IOPS to up to 30,000 (read replicas are available for MySQL)</h3>
+   </div>
+    <div class="slide">
+   		<h3>Reliable. Automated backups, DB snapshots, automatic host replacement, and Multi-AZ deployments</h3>
+   </div>
+    <div class="slide">
+   		<h3>Secure. Firewalls and Amazon VPC</h3>
+   </div>
+</section>
+
+<section class="slide">
+	<h1>Amazon RDS main features</h1>
+</section>
+
+<section class="slide" style="margin-left:11%">
+	<div class="slide">
+		<h2>Preconfigured parameters</h2>	
+	</div>
+   	<div class="slide">
+   		<h3>As simple as launching and connecting your application</h3>
+   </div>
+
+	<div class="slide">
+		<h2>Monitoring and metrics</h2>	
+	</div>
+   	<div class="slide">
+   		<h3>Cloudwatch service for your db instance</h3>
+   </div>
+
+	<div class="slide">
+		<h2>Automatic software patching</h2>	
+	</div>
+   	<div class="slide">
+   		<h3>Amazon will take care of having the database software up to date</h3>
+   </div>
+
+	<div class="slide">
+		<h2>Automated backups</h2>	
+	</div>
+   	<div class="slide">
+   		<h3>Point in time recovery for your instance</h3>
+   </div>
+
+	<div class="slide">
+		<h2>DB snapshots</h2>	
+	</div>
+   	<div class="slide">
+   		<h3>User initiated backups of your DB instance</h3>
+   </div>
+
+	<div class="slide">
+		<h2>Event notifications</h2>	
+	</div>
+   	<div class="slide">
+   		<h3>Amazon SNS notifications via email or SMS</h3>
+   </div>
+
+	<div class="slide">
+		<h2>Multi-Availability Zone (Multi-AZ) Deployments </h2>	
+	</div>
+   	<div class="slide">
+   		<h3>Enhanced availability and durability</h3>
+   </div>
+   	<div class="slide">
+   		<h3>Primary DB instance and synchronously replicates data to a standby instance in a different Availability Zone</h3>
+   </div>
+</section>
+
+<section class="slide" style="margin-left:11%">
+	<div class="slide">
+		<h2>Provisioned IOPS</h2>	
+	</div>
+   	<div class="slide">
+   		<h3>Provision up to 3TB storage and 30,000 IOPS per database instance</h3>
+   </div>
+   	<div class="slide">
+   		<h3>Convert from standard storage to Provisioned IOPS storage</h3>
+   </div>
+
+ 	<div class="slide">
+		<h2>Push-button scaling</h2>	
+	</div>
+
+ 	<div class="slide">
+		<h2>Automatic host replacement</h2>	
+	</div>
+
+ 	<div class="slide">
+		<h2>Replication</h2>	
+	</div>
+   	<div class="slide">
+   		<h3>Read replica and Multi-AZ deployments</h3>
+   </div>
+
+   	<div class="slide">
+   		<h2>Isolation and security</h2>
+   </div>
+   	<div class="slide">
+   		<h3>Isolate your DB Instances in your own virtual network</h3>
+   </div>
+
+   	<div class="slide">
+   		<h2>Resource level permissions</h2>
+   </div>
+   	<div class="slide">
+   		<h3>Ability to control the actions on your RDS resources</h3>
+   </div>
+   	<div class="slide">
+   		<h3>Tag RDS resources and configure actions over tags (for example, developers can modify "Development" instances)</h3>
+   </div>
+</section>
+
+<section class="slide">
+	<h1>Connecting our application to Amazon RDS</h1>
+</section>
+
+<section class="slide" style="margin-left:11%">
+	<div class="slide">
+		<h2>Go to the <a href="https://console.aws.amazon.com/rds/home?region=eu-west-1#">Amazon RDS section</a> of your console</h2>	
+	</div>
+   	<div class="slide">
+   		<h3>Launch a new instance</h3>
+   </div>
+
+	<div class="slide">
+		<h2>Select your database engine</h2>	
+	</div>
+   	<div class="slide">
+   		<h3>We are using PostgreSQL with NO PRODUCTION PURPOSES</h3>
+   </div>
+
+	<div class="slide">
+		<h2>Details of the instance to spawn</h2>	
+	</div>
+	<div class="slide">
+	   	<pre class="shell">
+DB Engine:	postgres
+License Model:	DB Engine Version:				
+DB Instance Class: db.t1.micro
+Multi-AZ Deployment: No
+Auto Minor Version Upgrade:	Yes
+
+Allocated Storage: 5
+Use Provisioned IOPS : No
+DB Instance Identifier: mimoinstance
+Master Username: mimo
+Master Password: *******
+	   </pre>
+	</div>
+
+	<div class="slide">
+		<h2>Additional configuration</h2>	
+	</div>
+	<div class="slide">
+   		<pre class="shell">
+Database Name: migue-spring-music
+Database Port: 5432
+   		</pre>
+   	</div>
+</section>
+
+<section class="slide" style="margin-left:11%">
+	<div class="slide">
+		<h2>Disable automatic backups</h2>	
+	</div>
+   	<div class="slide">
+   		<h3>We don´t need to backup our database since we are just developing</h3>
+   </div>
+
+	<div class="slide">
+		<h2>Review all the details and launch the instance</h2>	
+	</div>
+</section>
+
+<section class="slide" style="margin-left:11%">
+	<div class="slide">
+		<h2>Configure the security</h2>	
+	</div>
+   	<div class="slide">
+   		<h3>Allow the traffic comming from all the instances in the already created EC2 security group</h3>
+   </div>
+
+	<div class="slide">
+		<h2>Configure the application</h2>	
+	</div>
+	<div class="slide">
+		<h3>Configure your Systemd service to pass the required information</h3>	
+	</div>
+	<div class="slide">
+	   	<pre class="shell">
+export JDBC_DATABASE_URL=
+export JDBC_DATABASE_USERNAME=
+export JDBC_DATABASE_PASSWORD=
+java -Dserver.port=80 -jar spring-music-1.0.jar
+	   </pre>
+	</div>
+</section>
+
+<section class="slide">
+	<h1>Monitoring our application with Amazon CloudWatch</h1>
+</section>
+
+<section class="slide" style="margin-left:11%">
+	<div class="slide">
+		<h2>Realtime monitoring, including Amazon EC2 instances, Amazon EBS volumes, Elastic Load Balancers, and Amazon RDS DB instances</h2>
+	</div>
+
+	<div class="slide">
+		<h2>5 minute frequency is free of charge</h2>
+	</div>
+
+	<div class="slide">
+		<h2>No software installation is required</h2>	
+	</div>
+
+   	<div class="slide">
+   		<h2>Accesible via console, API, etc</h2>
+   </div>
+
+   	<div class="slide">
+   		<h2>Submit custom metrics</h2>
+   </div>
+
+   	<div class="slide">
+   		<h2>Set alarms to receive notifications</h2>
+   </div>
+
+   	<div class="slide">
+   		<h2>Use autoscaling to add or remove EC2 instances automatically based on metrics</h2>
+   </div>
+</section>
+
+<section class="slide">
+	<h1>Making a snapshot of our running application</h1>
+</section>
+
+<section class="slide" style="margin-left:11%">
+	<div class="slide">
+		<h2>Scaling</h2>
+	</div>
+	<div class="slide">
+		<h3>We want to make an snapshot of our recently configured app</h3>
+	</div>
+	<div class="slide">
+		<h3>An create an AMI so we can use it for future scaling (up and out)</h3>
+	</div>
+
+	<div class="slide">
+		<h2>Creating an AMI</h2>
+	</div>
+	<div class="slide">
+		<h3>Go to your EC2 AWS Console section</h3>
+	</div>
+	<div class="slide">
+		<h3>Select the instance we have used before (stop it if it's not arlready stopped)</h3>
+	</div>
+	<div class="slide">
+		<h3>Right Click > Create Image</h3>
+	</div>	
+	<div class="slide">
+		<pre class="shell">
+Instance ID i-916627de
+Image name your-new-ami-name
+Image description your-new-ami-description
+No reboot 
+		</pre>
+	</div>
+
+	<div class="slide">
+		<h2>Wait a few minutes, and check the AMI section in your console</h2>	
+	</div>
+
+   	<div class="slide">
+   		<h2>Exercice: launch 2 new instances based on the new AMI</h2>
+   </div>
+</section>
+
+<section class="slide">
+	<h1>Load balancing our requests</h1>
+</section>
+
+<section class="slide" style="margin-left:11%">
+	<div class="slide">
+		<h2>Load balancer?</h2>
+	</div>
+
+	<div class="slide">
+		<h3>We are putting a software in front of our machines so we can handle an increasing number of requests</h3>
+	</div>
+
+	<div class="slide">
+		<h2>Creating a load balancer</h2>
+	</div>
+	<div class="slide">
+		<h3>Go to your EC2 AWS Console section and click in the Load Balancer section</h3>
+	</div>
+	<div class="slide">
+		<h3>Create a new Load Balancer</h3>
+	</div>
+
+	<div class="slide">
+		<h2>Configuration</h2>	
+	</div>
+
+   	<div class="slide">
+   		<h3>Give it a name</h3>
+   </div>
+   	<div class="slide">
+   		<h3>Configure the allowed traffic (http traffic at the port 80 is enough)</h3>
+   </div>
+   	<div class="slide">
+   		<h3>Configure the health check: URL, timing periodis, response timeout, ...</h3>
+   </div>
+
+	<div class="slide">
+		<h2>Adding instances</h2>	
+	</div>
+
+   	<div class="slide">
+   		<h3>Select all the instances you want to put behind your load balancer</h3>
+   </div>
+    <div class="slide">
+   		<h3>Review your settings and start your new load balancer</h3>
+   </div>
+    <div class="slide">
+   		<h3>It will take a few minutes until all your instances are correctly configured</h3>
+   </div>   
+</section>
+
+<section class="slide">
+	<h1>Exercice: autoscaling</h1>
+</section>
+
+<section class="slide">
+	<h1>Elasticache</h1>
+</section>
+
+<section class="slide" style="margin-left:11%">
+	<div class="slide">
+		<h2>Elasticache highlights</h2>	
+	</div>
+   	<div class="slide">
+   		<h3>Web service that makes it easy to deploy, operate, and scale an in-memory cache</h3>
+   </div>
+   	<div class="slide">
+   		<h3>Available options: Memcached and Redis</h3>
+   </div>   
+    <div class="slide">
+   		<h3>Simple to Deploy. AWS Management Console or simple API calls to access the capabilities of a production-ready cloud cache cluster</h3>
+   </div>
+    <div class="slide">
+   		<h3>Managed. Patch management, failure detection and recovery</h3>
+   </div>
+    <div class="slide">
+   		<h3>Compatible. Native access to the Memcached or Redis in-memory caching environments</h3>
+   </div>
+   <div class="slide">
+   		<h3></h3>
+   </div>
+    <div class="slide">
+   		<h3>Elastic. Add or delete Cache Nodes to your cloud cache cluster to meet your application load</h3>
+   </div>
+    <div class="slide">
+   		<h3>Reliable. Automatic failure detection and recovery</h3>
+   </div>
+    <div class="slide">
+   		<h3>Integrated. Designed for seamless use with other Amazon Web Services</h3>
+   </div>
+    <div class="slide">
+   		<h3>Secure. Configure firewall settings that control network access. You can run your Cache cluster in your own VPC</h3>
+   </div>
+    <div class="slide">
+   		<h3>Cost Effective. Scale down/up according your needs</h3>
+   </div>
+    <div class="slide">
+   		<h3>Multi-AZ. Replication features for the Redis engine and Multi-AZ functionality</h3>
+   </div>
+    <div class="slide">
+   		<h3>Backup and Restore. You can set up automatic snapshots, as well as initiate a backup whenever you choose</h3>
+   </div>
+</section>
+
+<section class="slide">
+	<h1>Exercice: connect our application to ElasticCache Redis</h1>
+</section>
+
+<section class="slide">
+	<h1>A quick intro to Google Cloud Services</h1>
+</section>
+
+<section class="slide" style="margin-left:11%">
+	<div class="slide">
+		<h2>Google Cloud Platform</h2>
+		<h3>One of the most importants Cloud platforms out there</h3>
+		<h3>Each services includes a web interface, a command-line tool and a REST API.</h3>
+		<h3>All the concepts we've previously learnt are basically the same.</h3>
+	</div>
+</section>
+
+<section class="slide" style="margin-left:11%">
+	<div class="slide">
+		<h2>Services comparison</h2>
+	</div>
+
+	<div class="slide">	
+		<table>
+		<thead>
+			<tr>
+			<th>Service Category</th>
+			<th>Service</th>
+			<th>AWS</th>
+			<th>Google Cloud Platform</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+			<td>Compute</td>
+			<td>IaaS</td>
+			<td>Amazon Elastic Compute Cloud</td>
+			<td><a href="https://cloud.google.com/compute/">Google Compute Engine</a></td>
+			</tr>
+			<tr>
+			<td></td>
+			<td>PaaS</td>
+			<td>AWS Elastic Beanstalk</td>
+			<td><a href="https://cloud.google.com/appengine/">Google App Engine</a></td>
+			</tr>
+			<tr>
+			<td></td>
+			<td>Containers</td>
+			<td>Amazon Elastic Compute Cloud Container Service</td>
+			<td><a href="https://cloud.google.com/container-engine/">Google Container Engine</a></td>
+			</tr>
+			<tr>
+			<td>Network</td>
+			<td>Load Balancer</td>
+			<td>Elastic Load Balancer</td>
+			<td><a href="https://cloud.google.com/load-balancing/">Google Cloud Load Balancing</a></td>
+			</tr>
+			<tr>
+			<td></td>
+			<td>Peering</td>
+			<td>Direct Connect</td>
+			<td><a href="https://cloud.google.com/interconnect/">Google Cloud Interconnect</a></td>
+			</tr>
+			<tr>
+			<td></td>
+			<td>DNS</td>
+			<td>Amazon Route 53</td>
+			<td><a href="https://cloud.google.com/dns/">Google Cloud DNS</a></td>
+			</tr>
+			<tr>
+			<td>Storage</td>
+			<td>Object Storage</td>
+			<td>Amazon Simple Storage Service</td>
+			<td><a href="https://cloud.google.com/storage/">Google Cloud Storage</a></td>
+			</tr>
+			<tr>
+			<td></td>
+			<td>Block Storage</td>
+			<td>Amazon Elastic Block Store</td>
+			<td><a href="https://cloud.google.com/compute/docs/disks/persistent-disks">Google Compute
+				Engine Persistent Disks</a></td>
+			</tr>
+			<tr>
+			<td></td>
+			<td>Cold Storage</td>
+			<td>Amazon Glacier</td>
+			<td><a href="https://cloud.google.com/storage-nearline/">Google Cloud Storage Nearline</a></td>
+			</tr>
+			<tr>
+			<td></td>
+			<td>File Storage</td>
+			<td>Amazon Elastic File System</td>
+			<td><a href="http://www.averesystems.com/google-cloud-platform">ZFS /
+				Avere</a></td>
+			</tr>
+			<tr>
+			<td>Database</td>
+			<td>RDBMS</td>
+			<td>Amazon Relational Database Service</td>
+			<td><a href="https://cloud.google.com/sql/">Google Cloud SQL</a></td>
+			</tr>
+			<tr>
+			<td></td>
+			<td>NoSQL: Key-value</td>
+			<td>Amazon DynamoDB</td>
+			<td><a href="https://cloud.google.com/bigtable/">Google Cloud Bigtable</a></td>
+			</tr>
+			<tr>
+			<td></td>
+			<td>NoSQL: Indexed</td>
+			<td>Amazon SimpleDB</td>
+			<td><a href="https://cloud.google.com/datastore/">Google Cloud Datastore</a></td>
+			</tr>
+			<tr>
+			<td>Big Data &amp; Analytics</td>
+			<td>Batch Data Processing</td>
+			<td>Amazon Elastic Map Reduce</td>
+			<td><a href="https://cloud.google.com/dataproc/">Google Cloud Dataproc</a>,
+				<a href="https://cloud.google.com/dataflow/">Google Cloud Dataflow</a></td>
+			</tr>
+			<tr>
+			<td></td>
+			<td>Stream Data Processing</td>
+			<td>Amazon Kinesis</td>
+			<td><a href="https://cloud.google.com/dataflow/">Google Cloud Dataflow</a></td>
+			</tr>
+			<tr>
+			<td></td>
+			<td>Stream Data Ingest</td>
+			<td>Amazon Kinesis</td>
+			<td><a href="https://cloud.google.com/pubsub/">Google Cloud Pub/Sub</a></td>
+			</tr>
+			<tr>
+			<td></td>
+			<td>Analytics</td>
+			<td>Amazon Redshift</td>
+			<td><a href="https://cloud.google.com/bigquery/">Google BigQuery</a></td>
+			</tr>
+			<tr>
+			<td>Application Services</td>
+			<td>Messaging</td>
+			<td>Amazon Simple Notification Service</td>
+			<td><a href="https://cloud.google.com/pubsub/">Google Cloud Pub/Sub</a></td>
+			</tr>
+			<tr>
+			<td>Management Services</td>
+			<td>Monitoring</td>
+			<td>Amazon CloudWatch</td>
+			<td><a href="https://cloud.google.com/monitoring/">Stackdriver Monitoring</a></td>
+			</tr>
+			<tr>
+			<td></td>
+			<td>Deployment</td>
+			<td>AWS CloudFormation</td>
+			<td><a href="https://cloud.google.com/deployment-manager/">Google Cloud Deployment
+				Manager</a></td>
+			</tr>
+		</tbody>
+		</table>
+	</div>
+</section>
+
+<section class="slide">
+	<h1>Installing our application</h1>
+</section>
+<section class="slide" style="margin-left:11%">
+	<div class="slide">
+			<div class="slide"><h2>Create the instance</h2>
+				<pre class="shell">
+gcloud beta compute --project "gcloud-mimo" instances create "migue-spring-music" --zone "europe-west2-a" --machine-type "n1-standard-1" --subnet "default" --metadata "author=migue,service=spring-music" --maintenance-policy "MIGRATE" --service-account "146984355174-compute@developer.gserviceaccount.com" --scopes "https://www.googleapis.com/auth/devstorage.read_only","https://www.googleapis.com/auth/logging.write","https://www.googleapis.com/auth/monitoring.write","https://www.googleapis.com/auth/servicecontrol","https://www.googleapis.com/auth/service.management.readonly","https://www.googleapis.com/auth/trace.append" --min-cpu-platform "Automatic" --tags "http-server" --image "ubuntu-1604-xenial-v20171121a" --image-project "ubuntu-os-cloud" --boot-disk-size "10" --boot-disk-type "pd-standard" --boot-disk-device-name "migue-spring-music"
+				</pre>		
+			</div>
+			<div class="slide"><h2>Configure the traffic</h2>
+				<pre class="shell">
+gcloud compute --project=gcloud-mimo firewall-rules create default-allow-http --network=default --action=ALLOW --rules=tcp:80 --source-ranges=0.0.0.0/0 --target-tags=http-server
+				</pre>		
+			</div>
+	</div>
+	<div class="slide"><h2>Check it's been created</h2>
+		<div class="slide">
+			<pre class="shell">
+	gcloud compute instances list
+			</pre>		
+		</div>
+	</div>
+
+	<div class="slide"><h2>The default firewall rules already allow HTTP traffic</h2></div>
+</section>
+
+<section class="slide" style="margin-left:11%">
+	<div class="slide">
+			<div class="slide"><h2>Build our Spring Music application</h2>
+				<pre class="shell">
+./gradlew assemble
+				</pre>		
+			</div>
+	</div>
+
+	<div class="slide"><h2>Copying our application</h2>
+		<div class="slide">
+			<pre class="shell">
+gcloud compute scp build/libs/spring-music-1.0.jar migue-spring-music:/tmp --zone "europe-west2-a"
+			</pre>		
+		</div>
+	</div>
+
+	<div class="slide"><h2>Log into the machine</h2>
+		<div class="slide">
+			<pre class="shell">
+gcloud compute ssh --zone "europe-west2-a" "migue-spring-music"
+			</pre>		
+		</div>
+	</div>
+
+	<div class="slide"><h2>Install required software</h2>
+		<div class="slide">
+			<pre class="shell">
+sudo apt-get update
+sudo apt-get install openjdk-8-jre-headless
+			</pre>		
+		</div>
+	</div>
+</section>
+
+<section class="slide" style="margin-left:11%">
+	<div class="slide">
+			<div class="slide"><h2>Installing our app</h2>
+				<pre class="shell">
+sudo mkdir /opt/spring-music/ && cp /tmp/spring-music-1.0.jar /opt/spring-music && sudo touch /opt/spring-music/start.sh
+				</pre>		
+			</div>
+	</div>
+
+
+	<div class="slide"><h2>Create a startup script</h2>
+		<div class="slide">
+			<pre class="shell">
+export JDBC_DATABASE_URL=
+export JDBC_DATABASE_USERNAME=
+export JDBC_DATABASE_PASSWORD=
+java -Dserver.port=80 -jar spring-music-1.0.jar
+			</pre>		
+		</div>
+	</div>
+</section>
+
+<section class="slide" style="margin-left:11%">
+		<div class="slide">
+			<h2>Create a Systemd file</h2>
+		</div>
+		<div class="slide">
+			<div class="slide"><h3>Create the file /etc/systemd/system/spring-music.service</h3>
+				<pre class="shell">
+	[Unit]
+	Description="Spring Music Application"
+	
+	[Service]
+	WorkingDirectory=/opt/spring-music
+	ExecStart=/opt/spring-music/start.sh
+	ExecStop=/bin/kill -TERM $MAINPID
+	Type=simple
+	Restart=always
+	
+	[Install]
+	WantedBy=multi-user.target
+				</pre>
+			</div>
+			<div class="slide"><h3>Configure systemd</h3>
+				<pre class="shell">
+	sudo systemctl daemon-reload
+	sudo systemctl enable spring-music.service
+				</pre>
+			</div>
+		</div>
+	
+		<div class="slide">
+			<h2>Point your browser to the public dns address of your instance</h2>
+		</div>
+	</section>
+
+<section class="slide" style="margin-left:11%">
+	<div class="slide">
+		<h2>Create an snapshot</h2>
+	</div>
+	<div class="slide">
+		<div class="slide"><h3>Stop the machine first</h3>
+			<pre class="shell">
+gcloud compute instances stop migue-spring-music
+gcloud compute --project=gcloud-mimo disks snapshot migue-spring-music --zone=europe-west2-a --snapshot-names=migue-spring-music-snapshot
+			</pre>
+		</div>
+	</div>
+	<div class="slide"><h2>Create a new disk from the previous snapshot</h2>
+			<pre class="shell">
+gcloud compute --project "gcloud-mimo" disks create "migue-spring-music-2" --size "10" --zone "europe-west2-a" --source-snapshot "migue-spring-music-snapshot" --type "pd-standard"
+			</pre>
+	</div>
+	<div class="slide"><h2>Create a new instance from with the previous disk</h2>
+			<pre class="shell">
+gcloud beta compute --project "gcloud-mimo" instances create "migue-spring-music-2" --zone "europe-west2-a" --machine-type "n1-standard-1" --subnet "default" --metadata "author=migue,service=spring-music" --maintenance-policy "MIGRATE" --service-account "146984355174-compute@developer.gserviceaccount.com" --scopes "https://www.googleapis.com/auth/devstorage.read_only","https://www.googleapis.com/auth/logging.write","https://www.googleapis.com/auth/monitoring.write","https://www.googleapis.com/auth/servicecontrol","https://www.googleapis.com/auth/service.management.readonly","https://www.googleapis.com/auth/trace.append" --min-cpu-platform "Automatic" --tags "http-server" --disk "name=migue-spring-music-2,device-name=migue-spring-music-2,mode=rw,boot=yes,auto-delete=yes"
+			</pre>
+	</div>
+</section>
+
+
+<section class="slide" style="margin-left:11%">
+	<div class="slide">
+		<h2>Load balancing</h2>
+	</div>
+	<div class="slide">
+		<div class="slide"><h3>Create an instance group</h3>
+			<pre class="shell">
+gcloud compute --project "gcloud-mimo" instance-groups unmanaged create "migue-spring-music-instance-group" --zone "europe-west2-a" --description "Set of Spring Music services"
+
+gcloud compute --project "gcloud-mimo" instance-groups unmanaged add-instances "migue-spring-music-instance-group" --zone "europe-west2-a" --instances "migue-spring-music,migue-spring-music-2"
+			</pre>
+		</div>
+	</div>
+	<div class="slide"><h2>Create a Load Balancer</h2></div>
+	<div class="slide"><h3>We cannot use the command line, we have to use the UI here</h3>
+</section>
+
+<section class="slide">
+	<h1>References</h1>
+</section>
+
+<section class="slide" style="margin-left:11%">
+	<div class="slide"><h2>References</h2></div>
+	<div class="slide"><p><a href="https://aws.amazon.com/documentation/">AWS Docs</a></p></div>
+	<div class="slide"><p><a href="https://cloud.google.com/docs/">Google Cloud Docs</a></p></div>
+	<div class="slide"><p><a href="https://www.manning.com/books/amazon-web-services-in-action">Amazon Web Services in Action</a></p></div>
+	<div class="slide"><p><a href="https://www.manning.com/books/google-cloud-platform-in-action">Google Cloud Platform in Action</a></p></div>
+</section>
+<!-- End slides -->
+
+<!-- Begin extension snippets. Add or remove as needed. -->
+
+<!-- deck.navigation snippet -->
+<a href="#" class="deck-prev-link" title="Previous">&#8592;</a>
+<a href="#" class="deck-next-link" title="Next">&#8594;</a>
+
+<!-- deck.status snippet -->
+<p class="deck-status">
+	<span class="deck-status-current"></span>
+	/
+	<span class="deck-status-total"></span>
+</p>
+
+<!-- deck.goto snippet
+<form action="." method="get" class="goto-form">
+	<label for="goto-slide">Go to slide:</label>
+	<input type="text" name="slidenum" id="goto-slide" list="goto-datalist">
+	<datalist id="goto-datalist"></datalist>
+	<input type="submit" value="Go">
+</form>
+ -->
+
+<!-- deck.hash snippet -->
+<a href="." title="Permalink to this slide" class="deck-permalink">#</a>
+</body>
+</html>
