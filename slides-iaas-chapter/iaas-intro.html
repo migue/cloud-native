@@ -1582,6 +1582,132 @@ No reboot
 </section>
 
 <section class="slide">
+	<h1>Infrastructure as code: managing our deployments</h1>
+</section>
+
+<section class="slide" style="margin-left:11%">
+	<div class="slide">
+		<h2>Infrastructure as code</h2>	
+	</div>
+   	<div class="slide">
+   		<h3>We've done everything manually so far</h3>
+   </div>
+   <div class="slide">
+		<h3>Good enough to get familiar with the services</h3>
+	</div>
+   <div class="slide">
+		<h3>This doesn't scale as our system grows</h3>
+	</div>
+	<div class="slide">
+		<h3>Through this chapter we will learn how to manage our environment at scale</h3>
+	</div>	
+</section>
+
+<section class="slide">
+	<h1>What does infraestructure as code mean?</h1>
+</section>
+
+<section class="slide" style="margin-left:11%">
+	<div class="slide">
+		<h2>Infrastructure as code</h2>	
+	</div>
+   	<div class="slide">
+   		<h3>Historically the deployment has been managed by the Ops team</h3>
+   </div>
+   <div class="slide">
+		<h3>The rise of the Cloud is shifting the paradigm: ops people working on software</h3>
+	</div>
+	<div class="slide">
+		<h3>The idea is that we use code to define, deploy, update, and destroy our infraestructure</h3>
+	</div>
+	<div class="slide">
+		<h3>Four key metrics have been identified  for software delivery and operational performance:</h3>
+		<ul>
+			<div class="slide"><li>Delivery lead time: time to implement, test, and deliver changes to production</li></div>
+			<div class="slide"><li>Deployment frequency: how often changes are deployed to prod</li></div>
+			<div class="slide"><li>Change fail percentage: percentage of changes which cause problems and/or need immediate correction</li></div>
+			<div class="slide"><li>Mean time to restore: how long does it take to restore service when something goes wrong?</li></div>
+		</ul>
+	</div>
+</section>
+
+<section class="slide">
+	<h1>Different types of infraestructure as code</h1>
+</section>
+
+<section class="slide" style="margin-left:11%">
+	<div class="slide">
+		<h2>Custom scripts</h2>	
+	</div>
+		<div class="slide">
+			<h3>Write a script to solve the task we're manually doing</h3>
+		</div>
+		<div class="slide">
+			<h3>Use your favourite [scripting] language: Bash, Python, Ruby, ...</h3>
+		</div>
+		<div class="slide">
+			<h3>Execute the script in the server you want to privision</h3>
+		</div>
+		<div class="slide">
+			<h3>We've been doing something similar during our previous examples</h3>
+		</div>
+	<div class="slide">
+		<h2>Configuration management tools</h2>	
+	</div>
+		<div class="slide">
+			<h3>These tools are designed to install and manage software on existing servers</h3>
+		</div>
+		<div class="slide">
+			<h3>Examples: Chef, Puppet, Ansible or SaltStack</h3>	
+		</div>
+		<div class="slide">
+			<h3>Provide coding conventions, idempotence and distribution</h3>	
+		</div>
+	<div class="slide">
+		<h2>Server templating tools</h2>	
+	</div>
+		<div class="slide">
+			<h3>Create a self-contained image that includes: OS, software, required files, ...</h3>
+		</div>
+		<div class="slide">
+			<h3>Docker, Vagrant or Packer fit into this type of tooling</h3>	
+		</div>
+		<div class="slide">
+			<h3>Two broad categories to run the previous images: virtual machines and containers</h3>	
+		</div>
+		<div class="slide">
+			<h3>This is key to the immutable infrastructure movement (once you’ve deployed a server, you never make changes to it again)</h3>	
+		</div>
+</section>
+
+<section class="slide" style="margin-left:11%">
+	<div class="slide">
+		<h2>Orchestration tools</h2>	
+	</div>
+		<div class="slide">
+			<h3>How do you manage the previous virtual machines/containers</h3>
+		</div>
+		<div class="slide">
+			<h3>Deploy, rollout updates, blue-green deployments, monitoring, scale up and out, distribute traffic, ...</h3>
+		</div>
+		<div class="slide">
+			<h3>Tools like Nomad, Kubernetes, Mesos/Marathon, AWS ECS and many other, fit into this category</h3>
+		</div>
+		<div class="slide">
+			<h2>Provisioning tools</h2>	
+		</div>
+			<div class="slide">
+				<h3>Focus on provisioning the servers, not the software that runs on them</h3>
+			</div>
+			<div class="slide">
+				<h3>Not only servers of course: load balancers, databases, caches, queues, monitoring, ...</h3>
+			</div>
+			<div class="slide">
+				<h3>Terraform, CloudFormation or OpenStack fit into this category</h3>
+			</div>
+</section>
+
+<section class="slide">
 	<h1>A quick intro to Google Cloud Services</h1>
 </section>
 
