@@ -1708,6 +1708,487 @@ No reboot
 </section>
 
 <section class="slide">
+	<h1>The benefits of Infrastructure as Code</h1>
+</section>
+
+
+<section class="slide" style="margin-left:11%">
+	<div class="slide">
+		<h2>Self-service</h2>	
+	</div>
+		<div class="slide">
+			<h3>Everyone can get involved:from developers to sysadmins</h3>
+		</div>
+	<div class="slide">
+		<h2>Safety (and speed)</h2>	
+	</div>
+		<div class="slide">
+			<h3>Faster and safer deployments: consistente, repeatable and less error prone</h3>
+		</div>
+	<div class="slide">
+		<h2>Version control</h2>
+	</div>
+		<div class="slide">
+			<h3>Bring us the same benefits that regular source code: history, debugging issues, rollback to a previous version, core reviews,...</h3>
+		</div>
+	<div class="slide">
+		<h2>Reuse</h2>
+	</div>
+		<div class="slide">
+			<h3>Similar to the previous point, we can apply the same set of techniques used to develop the service/apps: build on top of composable and well tested modules</h3>
+		</div>
+</section>
+
+
+<section class="slide">
+	<h1>A practical perspective</h1>
+</section>
+
+<section class="slide" style="margin-left:11%">
+	<div class="slide">
+		<h2>A practical exercise</h2>	
+	</div>
+		<div class="slide">
+			<h3>Let's try to move our manual deployment towards an Infrastructure as Code approach</h3>
+		</div>
+		<div class="slide">
+			<h3>As we've seen we have way too many options (both types and tools); let's try to put the focus and just a few</h3>
+		</div>	
+		<div class="slide">
+			<h3>Our approach: immutable deployments. Provisioning + server templating</h3>
+		</div>
+		<div class="slide">
+			<h3>Our tools: Packer + Terraform</h3>
+		</div>
+		<div class="slide">
+			<h3>Why? Easy to start with, we're already familiar with the VMs world, no extra setup required (both Packer and Terraform are client-only apps)</h3>
+		</div>
+		<div class="slide">
+			<h3>Limitations: more complicated to achieve more complex things like blue-green deployments, but, for our goals, it will be good enough</h3>
+		</div>
+</section>
+
+<section class="slide">
+	<h1>Getting started with Packer + Terraform</h1>
+</section>
+
+<section class="slide" style="margin-left:11%">
+	<div class="slide">
+		<h2>Installing the required tools</h2>	
+	</div>
+		<div class="slide">
+			<h3>You can find here how to install Terraform in your OS: <a href="https://learn.hashicorp.com/tutorials/terraform/install-cli">Install Terraform</a></h3>
+		</div>
+		<div class="slide">
+			<h3>You can find here how to install Packer in your OS: <a href="https://learn.hashicorp.com/tutorials/packer/getting-started-install">Install Packer</a></h3>
+		</div>
+	<div class="slide">
+		<h2>Building our AMI (I)</h2>	
+	</div>
+		<div class="slide">
+			<h3>Let's use Packer to automate the process we've been manually doing before</h3>
+		</div>
+		<div class="slide">
+			<pre class="shell">
+				{
+					"variables": {
+					  "aws_access_key": "",
+					  "aws_secret_key": ""
+					},
+					"builders": [
+					  {
+						"type": "amazon-ebs",
+						"access_key": "{{user `aws_access_key`}}",
+						"secret_key": "{{user `aws_secret_key`}}",
+						"region": "eu-central-1",
+						"source_ami_filter": {
+						  "filters": {
+							"virtualization-type": "hvm",
+							"name": "ubuntu/images/*ubuntu-xenial-18.04-amd64-server-*",
+							"root-device-type": "ebs"
+						  },
+						  "owners": ["099720109477"],
+						  "most_recent": true
+						},
+						"instance_type": "t2.micro",
+						"ssh_username": "ubuntu",
+						"ami_name": "spring-music {{timestamp}}"
+					  }
+					]
+				  }				
+			</pre>				
+		</div>
+</section>
+
+<section class="slide" style="margin-left:11%">
+	<div class="slide">
+		<h2>Building our AMI (II)</h2>	
+	</div>
+		<div class="slide">
+			<h3>So far we have a clean AMI but we need to configure our application</h3>
+		</div>
+		<div class="slide">
+			<h3>Packer has the provisioner concept</h3>
+		</div>
+		<div class="slide">
+			<pre class="shell">
+				{
+					...
+					"provisioners": [
+					{
+					  "type": "file",
+					  "source": "spring-music.service",
+					  "destination": "/home/ubuntu/"
+					},
+					{
+						"type": "file",
+						"source": "spring-music-1.0.jar",
+						"destination": "/home/ubuntu/"
+					},
+					{
+						"type": "file",
+						"source": "start.sh",
+						"destination": "/home/ubuntu/"
+					},
+					{
+					  "type": "shell",
+					  "inline": [
+						"sleep 30",
+						"sudo apt-get update",
+						"sudo apt-get install openjdk-8-jre-headless",
+						"sudo mkdir /opt/spring-music",
+						"sudo cp /home/ubuntu/spring-music-1.0.jar /opt/spring-music",
+						"sudo cp /home/ubuntu/start.sh /opt/spring-music",
+						"sudo cp /home/ubuntu/spring-music.service /etc/systemd/system",
+						"sudo systemctl daemon-reload",
+						"sudo systemctl enable spring-music.service"
+					  ]
+					}
+				  ]
+				}				
+			</pre>				
+		</div>
+		<div class="slide">
+			<h3>We need to copy our application, the scripts to manage it and perform the installation</h3>
+		</div>
+</section>
+
+<section class="slide" style="margin-left:11%">
+	<div class="slide">
+		<h2>Building our AMI (III)</h2>	
+	</div>
+		<div class="slide">
+			<h3>The final Packer json file would be:</h3>
+		</div>
+		<div class="slide">
+			<pre class="shell">
+				{
+					"variables": {
+					  "aws_access_key": "",
+					  "aws_secret_key": ""
+					},
+					"builders": [
+					  {
+						"type": "amazon-ebs",
+						"access_key": "{{user `aws_access_key`}}",
+						"secret_key": "{{user `aws_secret_key`}}",
+						"region": "eu-central-1",
+						"source_ami_filter": {
+						  "filters": {
+							"virtualization-type": "hvm",
+							"name": "ubuntu/images/*ubuntu-xenial-18.04-amd64-server-*",
+							"root-device-type": "ebs"
+						  },
+						  "owners": ["099720109477"],
+						  "most_recent": true
+						},
+						"instance_type": "t2.micro",
+						"ssh_username": "ubuntu",
+						"ami_name": "spring-music {{timestamp}}"
+					  }
+					],
+					"provisioners": [
+					{
+					  "type": "file",
+					  "source": "spring-music.service",
+					  "destination": "/home/ubuntu/"
+					},
+					{
+						"type": "file",
+						"source": "spring-music-1.0.jar",
+						"destination": "/home/ubuntu/"
+					},
+					{
+						"type": "file",
+						"source": "start.sh",
+						"destination": "/home/ubuntu/"
+					},
+					{
+					  "type": "shell",
+					  "inline": [
+						"sleep 30",
+						"sudo apt-get update",
+						"sudo apt-get install openjdk-8-jre-headless",
+						"sudo mkdir /opt/spring-music",
+						"sudo cp /home/ubuntu/spring-music-1.0.jar /opt/spring-music",
+						"sudo cp /home/ubuntu/start.sh /opt/spring-music",
+						"sudo cp /home/ubuntu/spring-music.service /etc/systemd/system",
+						"sudo systemctl daemon-reload",
+						"sudo systemctl enable spring-music.service"
+					  ]
+					}
+				  ]
+				}				
+			</pre>				
+		</div>
+</section>
+
+<section class="slide" style="margin-left:11%">
+	<div class="slide">
+		<h2>Building our AMI (IV)</h2>	
+	</div>
+		<div class="slide">
+			<h3>At this point we're able to automatically create a new AMI every time we release a new version of our Spring Music application</h3>
+		</div>
+		<div class="slide">
+			<h3>This approach is more scalable and safer than the set of manual steps we did at the beginning of this chapter</h3>
+		</div>
+		<div class="slide">
+			<h3>Now, we need to automate the creation of new instances based on this AMI, and the corresponding load balancers and rest of the infra</h3>
+		</div>
+</section>
+
+<section class="slide" style="margin-left:11%">
+	<div class="slide">
+		<h2>Deploying a server (I)</h2>	
+	</div>
+		<div class="slide">
+			<h3>Our first goal is to deploy a single instance using Terraform and the AMI we've built during the previous section</h3>
+		</div>
+		<div class="slide">
+			<h3>Let's create our first Terraform script and name it main.tf. The first step will be to configure the provider:</h3>
+		</div>
+		<div class="slide">
+			<pre class="tf">
+provider "aws" {
+	region = "eu-central-1"
+}
+			</pre>
+		</div>
+		<div class="slide">
+			<h3>We're working with AWS as our infra provider and we want to use the central availability zone</h3>
+		</div>
+		<div class="slide">
+			<h3>For every provider we can define resources, of many different types: servers, load balancers, databases, ...</h3>
+		</div>
+		<div class="slide">
+			<h3>Let's define a new EC2 Instance using the AMI built during the previous section as the base:</h3>
+		</div>
+		<div class="slide">
+			<pre class="tf">
+resource "aws_instance" "spring_music" {
+	ami = "id-of-your-ami"
+	instance_type = "t2.micro"
+	
+	tags = {
+		Name = "spring-music"
+	}
+}
+			</pre>
+		</div>
+		<div class="slide">
+			<h3>With the previous minimal file we're ready to start a new instance with our spring-music application running in it</h3>
+		</div>
+</section>
+
+<section class="slide" style="margin-left:11%">
+	<div class="slide">
+		<h2>Deploying a server (II)</h2>	
+	</div>
+		<div class="slide">
+			<h3>Before running any of the Terraform commands we need to configure our AWS credentials:</h3>
+		</div>
+		<div class="slide">
+			<pre class="shell">
+export AWS_ACCESS_KEY_ID=(your access key id)
+export AWS_SECRET_ACCESS_KEY=(your secret access key)
+			</pre>
+		</div>
+		<div class="slide">
+			<h3>There're additional authentication methods available; in our examples we will be using the env variables approach. You can check the Terraform docs for more details.</h3>
+		</div>
+		<div class="slide">
+			<h3>Now, let's open our terminal and go to the folder where we've created our main.tf file. Once we're there, run the command:</h3>
+		</div>
+		<div class="slide">
+			<pre class="shell">
+terraform init
+			</pre>
+		</div>
+		<div class="slide">
+			<h3>The previous command will scan our code and will download everything that's required to properly run our program</h3>
+		</div>
+		<div class="slide">
+			<h3>At this point, we're ready to see the set of actions that will be executed. Run the command:</h3>
+		</div>
+		<div class="slide">
+			<pre class="shell">
+terraform plan
+			</pre>
+		</div>
+		<div class="slide">
+			<h3>The output of the previous command shows us the set of actions that Terraform will perform once we decide to execute it</h3>
+		</div>
+		<div class="slide">
+			<h3>It's really useful to double check what's going to be changed before doing any real change to our production system :D</h3>
+		</div>
+		<div class="slide">
+			<h3>We are ready to perform the changes. Go to the terminal and run:</h3>
+		</div>
+		<div class="slide">
+			<pre class="shell">
+terraform apply
+			</pre>
+		</div>
+		<div class="slide">
+			<h3>You will be prompted to approve the set of changes</h3>
+		</div>
+</section>
+
+<section class="slide" style="margin-left:11%">
+	<div class="slide">
+		<h2>Deploying a server (III)</h2>	
+	</div>
+		<div class="slide">
+			<h3>We have a new server running our Spring Music application</h3>
+		</div>
+		<div class="slide">
+			<h3>But remember from our manual process that we need to allow the traffic to port 80, otherwise, we won't be able to reach the port</h3>
+		</div>
+		<div class="slide">
+			<h3>Let's create a new security group</h3>
+		</div>
+		<div class="slide">
+			<pre class="shell">
+resource "aws_security_group" "instance" {
+	name = "spring-music"
+
+	ingress {
+		from_port = 80
+		to_port = 80
+		protocol = "tcp"
+		cidr_blocks = ["0.0.0.0/0"]
+	}
+}				
+			</pre>
+		</div>
+		<div class="slide">
+			<h3>Opening the access to any IP is not nice from a security perspective but it's good enough for now</h3>
+		</div>
+
+		<div class="slide">
+			<h3>The previous security group is an isolated resource, we need to connect it to our instance:</h3>
+		</div>
+		<div class="slide">
+			<pre class="tf">
+resource "aws_instance" "spring_music" {
+	ami = "id-of-your-ami"
+	instance_type = "t2.micro"
+	vpc_security_groups_ids = [aws_security_group.instance.id]
+	
+	tags = {
+		Name = "spring-music"
+	}
+}
+			</pre>
+		</div>
+		<div class="slide">
+			<h3>We're creating a dependency across these two resources. You can check see the dependency graph running the command:</h3>
+		</div>
+		<div class="slide">
+			<pre class="shell">
+terraform graph
+			</pre>
+		</div>
+</section>
+
+<section class="slide" style="margin-left:11%">
+	<div class="slide">
+		<h2>Deploying a server (IV)</h2>	
+	</div>
+		<div class="slide">
+			<h3>We're ready to deploy the new changes</h3>
+		</div>
+		<div class="slide">
+			<pre class="shell">
+terraform apply
+			</pre>
+		</div>
+		<div class="slide">
+			<h3>Now, our Spring Music application should be available at http://[IP of your machine]</h3>
+		</div>
+		<div class="slide">
+			<h3>At this point we just have on single instance running, but we would like to make our system more resilient</h3>
+		</div>
+		<div class="slide">
+			<h3>In the next section we're going to create a cluster of machines (the same we've previously done manually :D )</h3>
+		</div>		
+</section>
+
+<section class="slide" style="margin-left:11%">
+	<div class="slide">
+		<h2>Creating a cluster (I)</h2>	
+	</div>
+		<div class="slide">
+			<h3>We need to deploy more than one single instance and we've already seen that manually doing it can be a little bit cumbersome</h3>
+		</div>
+		<div class="slide">
+			<h3>There's a concept we've already talked about but we haven't seen it in practice: Auto Scaling Group (ASG)</h3>
+		</div>
+		<div class="slide">
+			<h3>ASG will take care of the cluster management for us: launch a new instance, monitor its health, replace a failed instance or even adjust the cluster size depending on the load of our system</h3>
+		</div>
+		<div class="slide">
+			<h3>The first thing we need to do is to define a "Launch Configuration" in our Terraform file:</h3>
+		</div>
+		<div class="slide">
+			<pre class="shell">
+resource "aws_launch_configuration" "spring_music" {
+	image_id = "the id of your AMI"
+	instance_type = "t2.micro"
+	security_groups = [aws_security_group.instance.id]
+
+	lifecycle {
+		create_before_destroy = true
+	}
+}
+			</pre>
+		</div>
+		<div class="slide">
+			<h3>And now we can create the ASG itself</h3>
+		</div>
+		<div class="slide">
+			<pre class="shell">
+resource "aws_autoscaling_group" "spring_music" {
+	launch_configuration = aws_launch_configuration.spring_music.name
+
+	min_size = 2
+	max_size = 2
+
+	tag {
+		key = "Name"
+		value = "spring-music-asg"
+		propagate_at_launch = true
+	}
+}
+			</pre>
+		</div>
+		<div class="slide">
+			<h3>The previous ASG will make sure that we always have 2 instances running and will tag both of them with the tag "Name"</h3>
+		</div>
+</section>
+
+<section class="slide">
 	<h1>A quick intro to Google Cloud Services</h1>
 </section>
 

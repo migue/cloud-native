@@ -1,0 +1,57 @@
+{
+    "variables": {
+      "aws_access_key": "",
+      "aws_secret_key": ""
+    },
+    "builders": [
+      {
+        "type": "amazon-ebs",
+        "access_key": "{{user `aws_access_key`}}",
+        "secret_key": "{{user `aws_secret_key`}}",
+        "region": "eu-central-1",
+        "source_ami_filter": {
+          "filters": {
+            "virtualization-type": "hvm",
+            "name": "ubuntu/images/*ubuntu-xenial-18.04-amd64-server-*",
+            "root-device-type": "ebs"
+          },
+          "owners": ["099720109477"],
+          "most_recent": true
+        },
+        "instance_type": "t2.micro",
+        "ssh_username": "ubuntu",
+        "ami_name": "spring-music {{timestamp}}"
+      }
+    ],
+    "provisioners": [
+    {
+      "type": "file",
+      "source": "spring-music.service",
+      "destination": "/home/ubuntu/"
+    },
+    {
+        "type": "file",
+        "source": "spring-music-1.0.jar",
+        "destination": "/home/ubuntu/"
+    },
+    {
+        "type": "file",
+        "source": "start.sh",
+        "destination": "/home/ubuntu/"
+    },
+    {
+      "type": "shell",
+      "inline": [
+        "sleep 30",
+        "sudo apt-get update",
+        "sudo apt-get install openjdk-8-jre-headless",
+        "sudo mkdir /opt/spring-music",
+        "sudo cp /home/ubuntu/spring-music-1.0.jar /opt/spring-music",
+        "sudo cp /home/ubuntu/start.sh /opt/spring-music",
+        "sudo cp /home/ubuntu/spring-music.service /etc/systemd/system",
+        "sudo systemctl daemon-reload",
+        "sudo systemctl enable spring-music.service"
+      ]
+    }
+  ]
+}
