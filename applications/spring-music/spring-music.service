@@ -1,5 +1,3 @@
-/etc/systemd/system/spring-music.service
-
 [Unit]
 Description="Spring Music Application"
 
