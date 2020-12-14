@@ -23,7 +23,7 @@
     },
     {
         "type": "file",
-        "source": "spring-music-1.0.jar",
+        "source": "./build/libs/spring-music-1.0.jar",
         "destination": "/home/ubuntu/"
     },
     {
