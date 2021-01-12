@@ -11,7 +11,7 @@ data "aws_subnet_ids" "default" {
 }
 
 resource "aws_launch_configuration" "spring_music" {
-  image_id = "ami-05f96e4ee17556788"
+  image_id = "ami-020e3a044c43bf879"
   instance_type = "t2.micro"
   security_groups = [aws_security_group.instance.id]
 
@@ -34,6 +34,17 @@ resource "aws_autoscaling_group" "spring_music_asg" {
     key = "Name"
     value = "spring-music-asg"
     propagate_at_launch = true
+  }
+}
+
+resource "aws_security_group" "instance" {
+  name = "spring-music-instance-security-group"
+
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
   }
 }
 
