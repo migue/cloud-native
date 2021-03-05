@@ -1,5 +1,5 @@
-Modern concurrency on the JVM
+Topics and Evaluation
 ------------------------------
 
-Basic concepts of PaaS and IaaS for developers
+This folder contains the slides about how the course will be rated
 
